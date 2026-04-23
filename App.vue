@@ -1,5 +1,5 @@
 <script setup>
-import { Button, Badge, Alert, TextInput, Sidebar, ListView, Avatar, Breadcrumbs } from './src'
+import { Button, Badge, Alert, TextInput, Sidebar, ListView, Avatar, Breadcrumbs, AxisChart, DonutChart, FunnelChart, NumberChart } from './src'
 import { ref } from 'vue'
 
 const isDark = ref(false)
@@ -281,7 +281,7 @@ const ghostValue = ref('')
         </div>
       </div>
       <div>
-  <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-ink-gray-5);">BREADCRUMBS</p>
+  <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-ink-gray-8);">BREADCRUMBS</p>
   <Breadcrumbs
     :items="[
       { label: 'Home', route: '/' },
@@ -289,6 +289,81 @@ const ghostValue = ref('')
       { label: 'Intrakore ERP' },
     ]"
   />
+</div>
+<!-- Number Chart -->
+<div>
+  <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-ink-gray-5);">NUMBER CHART</p>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <NumberChart :config="{
+      title: 'Total Revenue',
+      value: 1250000,
+      prefix: 'AED',
+      delta: 12.5,
+      deltaPrefix: '+',
+      deltaSuffix: '%'
+    }" style="width: 200px; border: 1px solid var(--outline-gray-2); border-radius: 8px;" />
+    <NumberChart :config="{
+      title: 'Lost Deals',
+      value: 45000,
+      prefix: 'AED',
+      delta: -5.2,
+      deltaSuffix: '%'
+    }" style="width: 200px; border: 1px solid var(--outline-gray-2); border-radius: 8px;" />
+  </div>
+</div>
+
+<!-- Axis Chart -->
+<div>
+  <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-ink-gray-8);">AXIS CHART</p>
+  <AxisChart :config="{
+    title: 'Monthly Revenue',
+    colors: ['#000FCE', '#705CFF', '#68C2A3'],
+    xAxis: { key: 'month', type: 'category' },
+    yAxis: { title: 'Revenue' },
+    series: [{ name: 'revenue', type: 'bar' }],
+    data: [
+      { month: 'Jan', revenue: 120000 },
+      { month: 'Feb', revenue: 180000 },
+      { month: 'Mar', revenue: 150000 },
+      { month: 'Apr', revenue: 210000 },
+      { month: 'May', revenue: 190000 },
+      { month: 'Jun', revenue: 240000 },
+    ]
+  }" style="height: 300px;" />
+</div>
+
+<!-- Donut Chart -->
+<div>
+  <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-ink-gray-8);">DONUT CHART</p>
+  <DonutChart :config="{
+    title: 'Deal Status',
+    colors: ['#000FCE', '#705CFF', '#68C2A3', '#8D95F6'],
+    categoryColumn: 'status',
+    valueColumn: 'count',
+    data: [
+      { status: 'Won', count: 45 },
+      { status: 'Lost', count: 20 },
+      { status: 'Active', count: 30 },
+      { status: 'Pending', count: 5 },
+    ]
+  }" style="height: 300px;" />
+</div>
+
+<!-- Funnel Chart -->
+<div>
+  <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-ink-gray-8);">FUNNEL CHART</p>
+  <FunnelChart :config="{
+    title: 'Sales Pipeline',
+    categoryColumn: 'stage',
+    valueColumn: 'count',
+    data: [
+      { stage: 'Leads', count: 100 },
+      { stage: 'Qualified', count: 75 },
+      { stage: 'Proposal', count: 50 },
+      { stage: 'Negotiation', count: 30 },
+      { stage: 'Won', count: 15 },
+    ]
+  }" style="height: 300px;" />
 </div>
 
     </div>
