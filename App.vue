@@ -1,5 +1,5 @@
 <script setup>
-import { Button, Badge, Alert, TextInput, Sidebar, ListView, Avatar, Breadcrumbs, AxisChart, DonutChart, FunnelChart, NumberChart, Calendar } from './src'
+import { Button, Badge, Alert, TextInput, Sidebar, ListView, Avatar, Breadcrumbs, AxisChart, DonutChart, FunnelChart, NumberChart, Calendar,Tabs } from './src'
 import { ref } from 'vue'
 
 const isDark = ref(false)
@@ -313,13 +313,18 @@ const ghostValue = ref('')
           />
         </div>
       </div>
-
+      <div>
+  <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-ink-gray-5);">TABS</p>
+  <Tabs
+    :tabs="[
+      { label: 'Overview' },
+      { label: 'Activity' },
+      { label: 'Documents' },
+      { label: 'Settings' },
+    ]"
+  />
+</div>
     </div>
   </div>
 </template>
 
-<style>
-[data-theme='dark'] {
-  --surface-white: #1A1A1A;
-}
-</style>
