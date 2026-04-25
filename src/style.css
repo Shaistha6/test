@@ -55,7 +55,6 @@
   font-weight: 700;
   font-style: normal;
 }
-@import './fonts/Inter/inter.css';
 
 @tailwind base;
 @tailwind components;
