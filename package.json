@@ -51,6 +51,15 @@
     "./tsconfig.base.json": {
       "default": "./tsconfig.base.json",
       "types": "./tsconfig.base.json"
+    },
+    "./tokens.css": {
+      "default": "./src/tokens.css"
+    },
+    "./src/style.css": {
+      "default": "./src/style.css"
+    },
+    "./src/tokens.css": {
+      "default": "./src/tokens.css"
     }
   },
   "files": [
