@@ -64,7 +64,7 @@
     "interactjs": "^1.10.0",
     "lowlight": "^3.3.0",
     "lucide-static": "^0.545.0",
-    "lucide-vue-next": "^0.400.0",
+    "lucide-vue-next": "^1.0.0",
     "marked": "^15.0.12",
     "ora": "5.4.1",
     "prosemirror-tables": "^1.8.1",
