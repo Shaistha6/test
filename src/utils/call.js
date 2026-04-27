@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 export default async function call(method, args, options = {}) {
-=======
-export default async function call(method, args, _headers) {
->>>>>>> 9165654b (feat: first commit)
   if (!args) {
     args = {}
   }
@@ -11,30 +7,17 @@ export default async function call(method, args, _headers) {
     {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
-<<<<<<< HEAD
-      'X-Intrakore-Site-Name': window.location.hostname,
-    },
-    options.headers || {},
-  )
-
-  if (window.csrf_token && window.csrf_token !== '{{ csrf_token }}') {
-    headers['X-Intrakore-CSRF-Token'] = window.csrf_token
-  }
-
-  let path = method.startsWith('/') ? method : `/api/method/${method}`
-  const res = await fetch(path, {
-=======
       'X-Frappe-Site-Name': window.location.hostname,
     },
-    _headers
+    options.headers || {},
   )
 
   if (window.csrf_token && window.csrf_token !== '{{ csrf_token }}') {
     headers['X-Frappe-CSRF-Token'] = window.csrf_token
   }
 
-  const res = await fetch(`/api/method/${method}`, {
->>>>>>> 9165654b (feat: first commit)
+  let path = method.startsWith('/') ? method : `/api/method/${method}`
+  const res = await fetch(path, {
     method: 'POST',
     headers,
     body: JSON.stringify(args),
@@ -45,7 +28,6 @@ export default async function call(method, args, _headers) {
     if (data.docs || method === 'login') {
       return data
     }
-<<<<<<< HEAD
     if (data.exc) {
       try {
         console.groupCollapsed(method)
@@ -60,8 +42,6 @@ export default async function call(method, args, _headers) {
         console.warn('Error printing debug messages', e)
       }
     }
-=======
->>>>>>> 9165654b (feat: first commit)
     return data.message
   } else {
     let response = await res.text()
@@ -84,10 +64,7 @@ export default async function call(method, args, _headers) {
     let e = new Error(errorParts.join('\n'))
     e.exc_type = error.exc_type
     e.exc = exception
-<<<<<<< HEAD
     e.status = res.status
-=======
->>>>>>> 9165654b (feat: first commit)
     e.messages = error._server_messages
       ? JSON.parse(error._server_messages)
       : []
@@ -106,7 +83,6 @@ export default async function call(method, args, _headers) {
         : ['Internal Server Error']
     }
 
-<<<<<<< HEAD
     if (options.onError) {
       options.onError({ response: res, status: res.status, error: e })
     }
@@ -120,8 +96,3 @@ export function createCall(options) {
     return call(method, args, options)
   }
 }
-=======
-    throw e
-  }
-}
->>>>>>> 9165654b (feat: first commit)
