@@ -89,5 +89,36 @@
     "vite": "^8.0.10"
   },
   "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./frappe": {
+      "import": "./frappe/index.js"
+    },
+    "./icons/*": {
+      "default": "./icons/*"
+    },
+    "./tailwind": {
+      "import": "./tailwind/index.js",
+      "default": "./tailwind/index.js"
+    },
+    "./vite": {
+      "import": "./vite/index.js"
+    },
+    "./style.css": {
+      "default": "./src/style.css"
+    },
+    "./tokens.css": {
+      "default": "./src/tokens.css"
+    },
+    "./src/tokens.css": {
+      "default": "./src/tokens.css"
+    },
+    "./src/style.css": {
+      "default": "./src/style.css"
+    }
+  }
 }
