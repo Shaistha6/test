@@ -1,4 +1,5 @@
 .DS_Store
+<<<<<<< HEAD
 node_modules
 
 # Logs
@@ -27,3 +28,6 @@ dist-ssr
 docs/.vitepress/cache
 docs/.vitepress/dist
 components.d.ts
+=======
+node_modules
+>>>>>>> 9165654b (feat: first commit)

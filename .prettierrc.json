@@ -1,6 +1,10 @@
 {
     "semi": false,
     "singleQuote": true,
+<<<<<<< HEAD
     "tabWidth": 2,
     "proseWrap": "always"
+=======
+    "tabWidth": 2
+>>>>>>> 9165654b (feat: first commit)
 }
