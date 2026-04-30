@@ -164,8 +164,15 @@ const resolvedInputClasses = computed(() => [
   inputFontSizeClasses(props.size),
 ])
 
+// The query exposed to item slots and custom-option handlers — empty unless
+// the user has actually typed since opening. Without this, a committed
+// label (e.g. "Alex Rivera") leaks into the slot context as if it were
+// a search term.
 const typedQuery = computed(() => (hasTypedSinceOpen.value ? query.value : ''))
 
+// Button mode covers two paths: caller-provided `#trigger` slot, or the
+// built-in button trigger selected via `trigger="button"`. In both cases
+// the search input moves into the popover.
 const isButtonMode = computed(
   () => Boolean(slots.trigger) || props.trigger === 'button',
 )
@@ -261,6 +268,9 @@ function handleInputChange(event: Event) {
   emit('update:query', value)
   emit('input', value)
 
+  // In input mode the input IS the selected-value display, so clearing it
+  // clears the model. In button mode the input lives in the popover and is
+  // only a filter — emptying it must not wipe the selection.
   if (value === '' && !isButtonMode.value) clearSelection()
 
   nextTick(() => rootRef.value?.highlightFirstItem?.())
@@ -286,6 +296,9 @@ function handleCreateOptionSelect(event: Event) {
   commitCustomValue(query.value)
 }
 
+// When a custom trigger is used, move focus to the search input inside the
+// popover as it opens. reka's default `openAutoFocus` would put focus on
+// the first item; we want the user typing to filter, not navigate.
 const popoverInputRef = ref<{ $el?: HTMLElement } | null>(null)
 
 function handleContentOpenAutoFocus(event: Event) {
@@ -322,6 +335,8 @@ watch(open, (value, previousValue) => {
 watch(
   () => displayValue.value,
   (value) => {
+    // Button mode keeps query decoupled — input is just a filter, the trigger
+    // shows the selected value independently.
     if (isButtonMode.value) return
     if (!open.value || !hasTypedSinceOpen.value) query.value = value
   },
@@ -331,6 +346,8 @@ watch(
 watch(open, (isOpen, wasOpen) => {
   if (isOpen === wasOpen) return
   if (isOpen) {
+    // On open in button mode, start the filter fresh — no leftover label
+    // like "In Progress" in the search input.
     if (isButtonMode.value) query.value = ''
     return
   }
@@ -355,7 +372,26 @@ defineSlots<ComboboxSlots>()
     @update:modelValue="handleRootModelValueChange"
     @update:open="handleRootOpenChange"
   >
+    <!--
+      Two trigger modes, picked automatically:
+        1. Default (`trigger="input"`): the trigger IS the search input.
+        2. Button mode (`trigger="button"` or `#trigger` slot provided):
+           caller's button — or the built-in auto-wired Button — opens the
+           popover; the search input moves into the popover header.
+    -->
     <template v-if="isButtonMode">
+      <!--
+        reka's `ComboboxTrigger` hardcodes `tabindex="-1"` — it assumes
+        the ComboboxInput is the tab-stop and the trigger is just a
+        mouse-clickable chevron. That's wrong for button mode where
+        there's no visible input to focus. Use `ComboboxAnchor`
+        (positioning only, no tabindex meddling) with a real <button>
+        as the child, and wire the open toggle ourselves.
+
+        Click + pointerdown are attached on the anchor so they forward
+        to the child via `as-child` — this makes consumer-supplied
+        `#trigger` elements "just work" without wiring handlers.
+      -->
       <ComboboxAnchor
         as-child
         @click="open = !open"
@@ -373,6 +409,14 @@ defineSlots<ComboboxSlots>()
           }"
         />
 
+        <!--
+          Rendered as a raw `<button>` (not the `<Button>` component) so
+          the prefix / label / chevron are direct flex children and
+          `justify-between` + label `flex-1` align cleanly. Wrapping in
+          `<Button>` would put the label inside Button's own default-slot
+          `<span>`, which is content-sized and would center the label in
+          `w-full` buttons.
+        -->
         <button
           v-else
           type="button"
@@ -392,6 +436,15 @@ defineSlots<ComboboxSlots>()
           aria-haspopup="listbox"
           :aria-expanded="open"
         >
+          <!--
+            Prefix precedence on the trigger:
+              1. selected + `#item-prefix` slot → reuse the list's per-item
+                 prefix renderer so the trigger matches the dropdown row
+                 without a second slot definition.
+              2. selected + `option.icon` → auto-render the icon (lucide
+                 string / emoji / component).
+              3. not selected + `#prefix` slot → user's placeholder affordance.
+          -->
           <template v-if="selectedOption && $slots['item-prefix']">
             <slot
               name="item-prefix"
@@ -405,7 +458,7 @@ defineSlots<ComboboxSlots>()
           <template v-else-if="selectedOption?.icon">
             <span
               v-if="isLucideIconString(selectedOption.icon)"
-              :class="[selectedOption.icon, 'size-4 shrink-0 text-ink-blueprint-3']"
+              :class="[selectedOption.icon, 'size-4 shrink-0 text-ink-gray-7']"
               aria-hidden="true"
             />
             <span
@@ -417,7 +470,7 @@ defineSlots<ComboboxSlots>()
             <component
               v-else-if="typeof selectedOption.icon !== 'string'"
               :is="selectedOption.icon"
-              class="size-4 shrink-0 text-ink-blueprint-3"
+              class="size-4 shrink-0 text-ink-gray-7"
             />
           </template>
           <slot v-else-if="!selectedOption && $slots.prefix" name="prefix" />
@@ -425,7 +478,7 @@ defineSlots<ComboboxSlots>()
           <span
             :class="[
               'min-w-0 flex-1 truncate text-left font-normal',
-              !selectedOption && 'text-ink-blueprint-2',
+              !selectedOption && 'text-ink-gray-4',
             ]"
           >
             {{ selectedOption?.label ?? placeholder }}
@@ -433,7 +486,7 @@ defineSlots<ComboboxSlots>()
 
           <span
             :class="[
-              'lucide-chevron-down size-4 shrink-0 text-ink-blueprint-3 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]',
+              'lucide-chevron-down size-4 shrink-0 text-ink-gray-4 transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]',
               open && 'rotate-180',
             ]"
           />
@@ -452,6 +505,11 @@ defineSlots<ComboboxSlots>()
         :style="attrs.style"
         @pointerdown="markPointerDown"
       >
+        <!--
+          Prefix precedence matches button mode: selected option's
+          `#item-prefix` → selected option's icon auto-render →
+          user's `#prefix` slot.
+        -->
         <template v-if="selectedOption && $slots['item-prefix']">
           <slot
             name="item-prefix"
@@ -461,7 +519,7 @@ defineSlots<ComboboxSlots>()
         <template v-else-if="selectedOption?.icon">
           <span
             v-if="isLucideIconString(selectedOption.icon)"
-            :class="[selectedOption.icon, 'size-4 shrink-0 text-ink-blueprint-3']"
+            :class="[selectedOption.icon, 'size-4 shrink-0 text-ink-gray-6']"
             aria-hidden="true"
           />
           <span
@@ -473,7 +531,7 @@ defineSlots<ComboboxSlots>()
           <component
             v-else-if="typeof selectedOption.icon !== 'string'"
             :is="selectedOption.icon"
-            class="size-4 shrink-0 text-ink-blueprint-3"
+            class="size-4 shrink-0 text-ink-gray-6"
           />
         </template>
         <slot v-else name="prefix" />
@@ -497,9 +555,9 @@ defineSlots<ComboboxSlots>()
         <ComboboxTrigger
           :disabled="disabled"
           data-slot="chevron"
-          class="ml-auto inline-flex shrink-0 items-center justify-center text-ink-blueprint-3 outline-none transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-[state=open]:rotate-180"
+          class="ml-auto inline-flex shrink-0 items-center justify-center text-ink-gray-4 outline-none transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] data-[state=open]:rotate-180"
         >
-          <span class="lucide-chevron-down size-4 text-ink-blueprint-3" />
+          <span class="lucide-chevron-down size-4 text-ink-gray-6" />
         </ComboboxTrigger>
       </ComboboxAnchor>
     </template>
@@ -538,7 +596,7 @@ defineSlots<ComboboxSlots>()
               :value="query"
               :disabled="disabled"
               :placeholder="placeholder"
-              class="min-w-0 flex-1 px-0 border-0 bg-transparent py-2 text-base text-ink-blueprint-4 outline-none placeholder:text-ink-blueprint-2 focus:ring-0"
+              class="min-w-0 flex-1 px-0 border-0 bg-transparent py-2 text-base text-ink-gray-8 outline-none placeholder:text-ink-gray-4 focus:ring-0"
               @input="handleInputChange"
               @focus="emit('focus', $event)"
               @blur="emit('blur', $event)"
@@ -591,6 +649,12 @@ defineSlots<ComboboxSlots>()
   animation: combobox-content-exit 140ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/*
+ * Keyboard-opens skip the scale + translate enter animation, but a tiny
+ * opacity fade still runs — it masks the 1-frame position-settle reka
+ * performs after mount. ~80ms is below the perception threshold for
+ * motion (feels instant) but long enough to hide the jump.
+ */
 [data-slot='content'][data-state='open']
   [data-slot='content-body'][data-motion='instant'] {
   animation: combobox-content-instant-fade 80ms linear;
@@ -619,6 +683,7 @@ defineSlots<ComboboxSlots>()
     opacity: 0;
     transform: translateY(2px) scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -630,6 +695,7 @@ defineSlots<ComboboxSlots>()
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+
   to {
     opacity: 0;
     transform: translateY(1px) scale(0.985);
