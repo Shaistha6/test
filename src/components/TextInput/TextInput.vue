@@ -80,7 +80,7 @@ const inputRef = ref<HTMLInputElement | null>(null)
 defineExpose({ el: inputRef })
 
 const textColor = computed(() => {
-  return props.disabled ? 'text-ink-blueprint-2' : 'text-ink-blueprint-2'
+  return props.disabled ? 'text-ink-gray-5' : 'text-ink-blueprint-4'
 })
 
 const inputClasses = computed(() => {
@@ -117,13 +117,13 @@ const inputClasses = computed(() => {
   let variant = props.disabled ? 'disabled' : props.variant
   let variantClasses = {
     subtle:
-      'border border-transparent bg-surface-blueprint-2 placeholder-ink-blueprint-2 hover:text-ink-blueprint-2 hover:bg-surface-blueprint-1 focus:text-ink-blueprint-4 focus:bg-surface-blueprint-2 focus:border-transparent focus:ring-2 focus:ring-outline-blueprint-2 focus:ring-offset-0 active:text-ink-blueprint-4 active:bg-surface-blueprint-2 active:border-outline-blueprint-3',
+      'border border-transparent bg-surface-blueprint-1 placeholder-ink-blueprint-2 hover:text-ink-blueprint-2 hover:bg-surface-blueprint-2 focus:text-ink-blueprint-4 focus:bg-surface-blueprint-1 focus:border-transparent focus:ring-2 focus:ring-outline-blueprint-2 focus:ring-offset-0 active:text-ink-blueprint-4 active:bg-surface-blueprint-2 active:border-outline-blueprint-2',
     outline:
-      'border border-outline-blueprint-2 bg-surface-white placeholder-ink-blueprint-3 hover:text-ink-blueprint-3 hover:border-outline-blueprint-3 focus:text-ink-blueprint-4 focus:border-transparent focus:ring-2 focus:ring-outline-blueprint-2 focus:ring-offset-0 active:text-ink-blueprint-4 active:border-outline-blueprint-4',
+      'border border-outline-blueprint-2 bg-surface-white placeholder-ink-blueprint-2 hover:text-ink-blueprint-3 hover:border-outline-blueprint-3 focus:text-ink-blueprint-4 focus:border-transparent focus:ring-2 focus:ring-outline-blueprint-2 focus:ring-offset-0 active:text-ink-blueprint-4 active:border-outline-blueprint-2',
     disabled: [
-      'border bg-surface-blueprint-1 placeholder-ink-blueprint-2',
+      'border bg-surface-gray-1 placeholder-ink-gray-3',
       props.variant === 'outline'
-        ? 'border-outline-blueprint-1'
+        ? 'border-outline-gray-2'
         : 'border-transparent',
     ],
     ghost: 'border-0 focus:ring-0 focus-visible:ring-0',
