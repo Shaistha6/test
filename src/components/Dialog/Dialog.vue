@@ -12,7 +12,7 @@
           :style="dialogPositionStyles"
         >
           <DialogContent
-            class="my-8 inline-block w-full transform overflow-hidden rounded-xl bg-surface-modal text-left align-middle shadow-xl dialog-content focus-visible:outline-none"
+            class="my-8 inline-block w-full transform overflow-hidden rounded-xl bg-surface-modal text-start align-middle shadow-xl dialog-content focus-visible:outline-none"
             :class="{
               'max-w-7xl': options.size === '7xl',
               'max-w-6xl': options.size === '6xl',
@@ -68,7 +68,7 @@
                           <DialogClose as-child>
                             <Button variant="ghost" @click="close">
                               <template #icon>
-                                <LucideX class="h-4 w-4 text-ink-gray-9" />
+                                <span class="lucide-x size-4 text-ink-gray-9" />
                               </template>
                             </Button>
                           </DialogClose>
@@ -125,7 +125,6 @@ import {
 import { computed, reactive } from 'vue'
 import { Button } from '../Button'
 import FeatherIcon from '../FeatherIcon.vue'
-import { X as LucideX } from 'lucide-vue-next'
 import type {
   DialogProps,
   DialogIcon,

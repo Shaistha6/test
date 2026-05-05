@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { state } from '../../state'
-import { useData, useRoute } from 'vitepress'
+import { useData, useRoute, withBase } from 'vitepress'
 
 import LucidePalette from '~icons/lucide/palette'
 import LucideRows from '~icons/lucide/rows-3'
@@ -13,6 +13,8 @@ import LucideBlend from '~icons/lucide/blend'
 import LucideRadius from '~icons/lucide/radius'
 import ChevronRight from '~icons/lucide/chevron-right'
 import LucideBox from '~icons/lucide/box'
+import LucideShapes from '~icons/lucide/shapes'
+import LucideArchive from '~icons/lucide/archive'
 import pkgJson from '../../../package.json'
 
 import {
@@ -24,11 +26,18 @@ import {
 
 const curVersion = pkgJson.version
 const componentList = useData().theme.value.componentList
-const componentItems = componentList.map((name) => ({
-  text: name,
-  icon: LucideBox,
-  link: `/docs/components/${name.toLowerCase()}`,
-}))
+const componentItems = [
+  ...componentList.map((name) => ({
+    text: name,
+    icon: LucideBox,
+    link: `/docs/components/${name.toLowerCase()}`,
+  })),
+  {
+    text: 'Legacy components',
+    icon: LucideArchive,
+    link: '/docs/components/legacy',
+  },
+]
 
 const list = [
   {
@@ -105,6 +114,11 @@ const list = [
     text: 'Other',
     items: [
       {
+        text: 'Icons',
+        icon: LucideShapes,
+        link: '/docs/other/icons',
+      },
+      {
         text: 'Utilities',
         icon: LucideSettings,
         link: '/docs/other/utilities',
@@ -134,7 +148,7 @@ const linkClass = 'p-2 rounded'
   >
     <a
       class="hidden lg:flex items-center gap-2 p-2 py-3 mb-3"
-      href="/"
+      :href="withBase('/')"
     >
       <img src="/logo.svg" class="w-8" />
       <div class="flex flex-col gap-1 *:leading-none">
@@ -153,7 +167,7 @@ const linkClass = 'p-2 rounded'
           <template v-for="(item, i) in list" :key="item.text">
             <a
               v-if="!item.items"
-              :href="item.link"
+              :href="withBase(item.link)"
               :class="[
                 linkClass,
                 activeLink(item.link),
@@ -177,7 +191,7 @@ const linkClass = 'p-2 rounded'
 
               <div class="flex flex-col mb-6">
                 <a
-                  :href="child.link"
+                  :href="withBase(child.link)"
                   v-for="child in item.items"
                   :key="child.text"
                   class="inline-flex gap-2 items-center"

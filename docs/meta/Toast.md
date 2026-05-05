@@ -3,63 +3,75 @@
   import PropsTable from '@/components/Docs/PropsTable.vue'
   import SlotsTable from '@/components/Docs/SlotsTable.vue'
   import EmitsTable from '@/components/Docs/EmitsTable.vue'
-</script>
-<PropsTable name="Toast" :data='[
-  {
-    "name": "open",
-    "description": "",
-    "required": true,
-    "type": "boolean"
-  },
-  {
-    "name": "message",
-    "description": "",
-    "required": false,
-    "type": "string"
-  },
-  {
-    "name": "type",
-    "description": "",
-    "required": false,
-    "type": "\"info\" | \"success\" | \"warning\" | \"error\""
-  },
-  {
-    "name": "duration",
-    "description": "",
-    "required": false,
-    "type": "number"
-  },
-  {
-    "name": "icon",
-    "description": "",
-    "required": false,
-    "type": "Component"
-  },
-  {
-    "name": "closable",
-    "description": "",
-    "required": false,
-    "type": "boolean"
-  },
-  {
-    "name": "action",
-    "description": "",
-    "required": false,
-    "type": "{ label: string; altText?: string; onClick: () => void; } | undefined"
-  }
-]'/> 
 
-## Emit Events 
- <EmitsTable :data='[
+  const propsData = [
   {
-    "name": "action",
-    "description": "",
-    "type": "[]"
+    name: 'open',
+    description: 'Controls whether the toast is visible (required)',
+    required: true,
+    type: 'boolean',
+    default: undefined
   },
   {
-    "name": "update:open",
-    "description": "",
-    "type": "[value: boolean]"
+    name: 'message',
+    description: 'Message content rendered inside the toast',
+    required: false,
+    type: 'string',
+    default: undefined
+  },
+  {
+    name: 'type',
+    description: 'Visual tone of the toast',
+    required: false,
+    type: '"success" | "error" | "info" | "warning"',
+    default: undefined
+  },
+  {
+    name: 'duration',
+    description: 'Auto-dismiss duration in milliseconds',
+    required: false,
+    type: 'number',
+    default: undefined
+  },
+  {
+    name: 'icon',
+    description: 'Optional custom icon rendered before the message',
+    required: false,
+    type: 'Component',
+    default: undefined
+  },
+  {
+    name: 'closable',
+    description: 'Whether the close button is shown',
+    required: false,
+    type: 'boolean',
+    default: undefined
+  },
+  {
+    name: 'action',
+    description: 'Optional action rendered on the right side of the toast',
+    required: false,
+    type: 'ToastAction',
+    default: undefined
   }
-]'/> 
+]
+
+  const emitsData = [
+  {
+    name: 'update:open',
+    description: 'Fired when the open state changes.',
+    type: '[value: boolean]'
+  },
+  {
+    name: 'action',
+    description: '',
+    type: '[]'
+  }
+]
+</script>
+## API Reference
+
+<PropsTable name="Toast" :data="propsData"/> 
+
+<EmitsTable :data="emitsData"/> 
 

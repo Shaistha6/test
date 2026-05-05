@@ -23,7 +23,7 @@
     <Combobox
       v-else-if="type === 'combobox'"
       :id="id"
-      v-bind="{ ...controlAttrs, variant }"
+      v-bind="{ ...controlAttrs, size, variant }"
     >
       <template #prefix v-if="$slots.prefix">
         <slot name="prefix" />
@@ -68,22 +68,36 @@
   />
 </template>
 <script setup lang="ts">
-import { useAttrs, computed } from 'vue'
+import { useAttrs, computed, provide, watchEffect } from 'vue'
 import { useId } from '../../utils/useId'
 import { TextInput } from '../TextInput'
 import { Select } from '../Select'
 import { Textarea } from '../Textarea'
 import { Checkbox } from '../Checkbox'
 import { Autocomplete } from '../Autocomplete'
+import { autocompleteDeprecationSuppressed } from '../Autocomplete/deprecationKey'
 import { Combobox } from '../Combobox'
 import FormLabel from '../FormLabel.vue'
+import { warnDeprecated } from '../../utils/warnDeprecated'
 import type { FormControlProps } from './types'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const id = useId()
 const props = withDefaults(defineProps<FormControlProps>(), {
   type: 'text',
   size: 'sm',
   variant: 'subtle',
+})
+
+provide(autocompleteDeprecationSuppressed, true)
+
+watchEffect(() => {
+  if (props.type === 'autocomplete') {
+    warnDeprecated('FormControl type="autocomplete"', 'Combobox')
+  }
 })
 
 const attrs = useAttrs()
@@ -120,9 +134,4 @@ defineSlots<{
   /** Default slot override for full input rendering */
   default?: () => any
 }>()
-</script>
-<script lang="ts">
-export default {
-  inheritAttrs: false,
-}
 </script>

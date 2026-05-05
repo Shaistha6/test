@@ -1,37 +1,68 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tabs } from 'frappe-ui'
-import LucidePreview from '~icons/lucide/square-mouse-pointer'
-import LucideCode from '~icons/lucide/code'
+import { TabButtons } from 'frappe-ui'
 
 interface ComponentPreviewProps {
   name: string
   css?: string
+  /**
+   * `tabs` (default): preview and code in a tab switcher.
+   * `stacked`: preview on top, code directly below — shown together.
+   */
+  layout?: 'tabs' | 'stacked'
 }
 
-defineProps<ComponentPreviewProps>()
-const state = ref(0)
+const props = withDefaults(defineProps<ComponentPreviewProps>(), {
+  layout: 'tabs',
+})
 
-const tabs = [
-  { label: 'Preview', icon: LucidePreview },
-  { label: 'Code', icon: LucideCode },
+const activeTab = ref('preview')
+
+const previewTabs = [
+  { label: 'Preview', value: 'preview' },
+  { label: 'Code', value: 'code' },
 ]
 </script>
 
 <template>
-  <div class="grid gap-5 not-prose">
-    <Tabs :tabs="tabs" v-model="state" class="[&>[role=tablist]]:border-0 [&>[role=tablist]]:gap-4 [&>[role=tablist]]:px-0">
-      <template #tab-panel="{ tab }">
+  <div class="grid not-prose">
+    <template v-if="props.layout === 'stacked'">
+      <div
+        class="rounded-xl overflow-hidden border border-outline-gray-1 divide-y divide-outline-gray-1"
+      >
         <div
-          v-if="tab.label === 'Preview'"
-          :class='["border border-outline-gray-2 p-5 rounded overflow-auto scrollbar mt-3 flex gap-3 items-center", css]'
+          :class="[
+            'bg-surface-white p-8 overflow-auto scrollbar flex gap-3 items-center',
+            css,
+          ]"
         >
           <slot />
         </div>
-        <div v-else class="mt-3">
+
+        <div>
           <slot name="code" />
         </div>
-      </template>
-    </Tabs>
+      </div>
+    </template>
+
+    <template v-else>
+      <TabButtons :buttons="previewTabs" v-model="activeTab" />
+      <div class="mt-2 rounded-xl overflow-hidden border border-outline-gray-1">
+        <div v-if="activeTab === 'preview'">
+          <div
+            :class="[
+              'bg-surface-white p-8 overflow-auto scrollbar flex gap-3 items-center',
+              css,
+            ]"
+          >
+            <slot />
+          </div>
+        </div>
+
+        <div v-else>
+          <slot name="code" />
+        </div>
+      </div>
+    </template>
   </div>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, h, ref, watch, type Component } from 'vue'
 import {
   TabsContent,
   TabsIndicator,
@@ -7,11 +8,38 @@ import {
   TabsTrigger,
 } from 'reka-ui'
 
-import type { TabProps } from './types'
-import { h } from 'vue'
+import type { TabsEmits, TabsProps } from './types'
 
-const props = defineProps<TabProps>()
-const model = defineModel<string | number>({ default: 0 })
+const props = defineProps<TabsProps>()
+const emit = defineEmits<TabsEmits>()
+
+const internalModel = ref<string | number>(props.modelValue ?? 0)
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value !== undefined) {
+      internalModel.value = value
+    }
+  },
+  { immediate: true },
+)
+
+const model = computed({
+  get: () => props.modelValue ?? internalModel.value,
+  set: (value: string | number) => {
+    internalModel.value = value
+    emit('update:modelValue', value)
+  },
+})
+
+const dir = computed<'rtl' | 'ltr'>(
+  () =>
+    props.dir ??
+    (typeof document !== 'undefined' && document.documentElement.dir === 'rtl'
+      ? 'rtl'
+      : 'ltr'),
+)
 
 const indicatorXCss = `left-0 bottom-0 h-[2px] w-[--reka-tabs-indicator-size] transition-[width,transform]
                           translate-x-[--reka-tabs-indicator-position] translate-y-[1px]`
@@ -25,16 +53,21 @@ const Btn = h('button')
 
 defineSlots<{
   /** Custom renderer for a tab trigger (icon + label / router-link). */
-  'tab-item'?: (props: { tab: { label: string; icon?: string; route?: string } }) => any
+  'tab-item'?: (props: {
+    tab: { label: string; icon?: string | Component; route?: string }
+  }) => any
 
   /** Content rendered for each tab panel. */
-  'tab-panel'?: (props: { tab: { label: string; icon?: string; route?: string } }) => any
+  'tab-panel'?: (props: {
+    tab: { label: string; icon?: string | Component; route?: string }
+  }) => any
 }>()
 </script>
 
 <template>
   <TabsRoot
     :as="props.as"
+    :dir="dir"
     class="flex flex-1 overflow-hidden flex-col data-[orientation=vertical]:flex-row"
     :orientation="props.vertical ? 'vertical' : 'horizontal'"
     :default-value="props.tabs[0].label"
@@ -62,8 +95,16 @@ defineSlots<{
             class="flex items-center gap-1.5 text-base text-ink-blueprint-2 duration-300 ease-in-out hover:text-ink-blueprint-3 data-[state=active]:text-ink-blueprint-4"
             :class="{ 'px-2.5': props.vertical, 'py-2.5': !props.vertical }"
           >
-            <component v-if="tab.icon" :is="tab.icon" class="size-4">
-            </component>
+            <span
+              v-if="tab.icon && typeof tab.icon === 'string' && tab.icon.startsWith('lucide-')"
+              class="size-4"
+              :class="tab.icon"
+            />
+            <component
+              v-else-if="tab.icon"
+              :is="tab.icon"
+              class="size-4"
+            />
 
             {{ tab.label }}
           </component>

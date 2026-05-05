@@ -3,68 +3,192 @@
   import PropsTable from '@/components/Docs/PropsTable.vue'
   import SlotsTable from '@/components/Docs/SlotsTable.vue'
   import EmitsTable from '@/components/Docs/EmitsTable.vue'
+
+  const propsData = [
+  {
+    name: 'modelValue',
+    description: 'Array of selected option values.',
+    required: false,
+    type: 'string[]',
+    default: '[]'
+  },
+  {
+    name: 'options',
+    description: 'Options rendered in the popover.',
+    required: false,
+    type: 'MultiSelectOptions',
+    default: '[]'
+  },
+  {
+    name: 'variant',
+    description: 'Visual style of the trigger.',
+    required: false,
+    type: 'MultiSelectVariant',
+    default: '"subtle"'
+  },
+  {
+    name: 'size',
+    description: 'Size of the trigger and option rows.',
+    required: false,
+    type: 'MultiSelectSize',
+    default: '"sm"'
+  },
+  {
+    name: 'placeholder',
+    description: 'Placeholder text shown when no value is selected.',
+    required: false,
+    type: 'string',
+    default: '"Select option"'
+  },
+  {
+    name: 'disabled',
+    description: 'Disables the multi-select.',
+    required: false,
+    type: 'boolean',
+    default: 'false'
+  },
+  {
+    name: 'id',
+    description: 'Optional HTML id forwarded to the trigger.',
+    required: false,
+    type: 'string'
+  },
+  {
+    name: 'open',
+    description: 'Controls the popover visibility.',
+    required: false,
+    type: 'boolean',
+    default: 'false'
+  },
+  {
+    name: 'hideSearch',
+    description: 'Hides the in-popover search input.',
+    required: false,
+    type: 'boolean',
+    default: 'false'
+  },
+  {
+    name: 'loading',
+    description: 'Replaces the results with a loading state.',
+    required: false,
+    type: 'boolean',
+    default: 'false'
+  },
+  {
+    name: 'emptyText',
+    description: 'Fallback empty-state copy.',
+    required: false,
+    type: 'string',
+    default: '"No results"'
+  },
+  {
+    name: 'side',
+    description: 'Preferred popover side.',
+    required: false,
+    type: 'PopoverSide',
+    default: '"bottom"'
+  },
+  {
+    name: 'align',
+    description: 'Preferred popover alignment.',
+    required: false,
+    type: 'PopoverAlign',
+    default: '"start"'
+  },
+  {
+    name: 'offset',
+    description: 'Gap between trigger and content.',
+    required: false,
+    type: 'number',
+    default: '4'
+  },
+  {
+    name: 'portalTo',
+    description: 'Teleport target for the popover content.',
+    required: false,
+    type: 'string | HTMLElement',
+    default: '"body"'
+  },
+  {
+    name: 'compareFn',
+    description: 'Custom equality function used to resolve which options are currently\nselected for display and rendering. When omitted, the component uses\nstrict equality on `option.value` against entries in `modelValue`.',
+    required: false,
+    type: '((a: MultiSelectOption, b: MultiSelectOption) => boolean)'
+  }
+]
+
+  const slotsData = [
+  {
+    name: 'trigger',
+    description: 'Fully custom trigger renderer.',
+    type: 'MultiSelectTriggerSlotProps'
+  },
+  {
+    name: 'item-prefix',
+    description: 'Shared content rendered before the standard row label.',
+    type: 'MultiSelectItemSlotProps'
+  },
+  {
+    name: 'item-label',
+    description: 'Shared content rendered for the standard row label area.',
+    type: 'MultiSelectItemSlotProps'
+  },
+  {
+    name: 'item-suffix',
+    description: 'Shared content rendered after the standard row label area.',
+    type: 'MultiSelectItemSlotProps'
+  },
+  {
+    name: 'item',
+    description: 'Replaces the entire row.',
+    type: 'MultiSelectItemSlotProps'
+  },
+  {
+    name: 'group-label',
+    description: 'Custom renderer for group labels.',
+    type: 'MultiSelectGroupLabelSlotProps'
+  },
+  {
+    name: 'empty',
+    description: 'Fallback content rendered when there are no results.',
+    type: 'MultiSelectEmptySlotProps'
+  },
+  {
+    name: 'footer',
+    description: 'Replaces the default Clear All / Select All footer.',
+    type: 'MultiSelectFooterSlotProps'
+  },
+  {
+    name: 'option',
+    description: '',
+    type: '{ item: MultiSelectOption; }',
+    deprecated: 'compatibility alias for `#item-label`.'
+  }
+]
+
+  const emitsData = [
+  {
+    name: 'update:modelValue',
+    description: 'Fired when the model value changes.',
+    type: 'unknown[]'
+  },
+  {
+    name: 'update:open',
+    description: 'Fired when the open state changes.',
+    type: 'unknown[]'
+  },
+  {
+    name: 'update:query',
+    description: 'Fired when the query changes.',
+    type: '[value: string]'
+  }
+]
 </script>
-<PropsTable name="MultiSelect" :data='[
-  {
-    "name": "placeholder",
-    "description": "Placeholder text shown when no item is selected",
-    "required": false,
-    "type": "string",
-    "default": "\"Select option\""
-  },
-  {
-    "name": "options",
-    "description": "Options available to select from",
-    "required": true,
-    "type": "MultiSelectOption[]"
-  },
-  {
-    "name": "hideSearch",
-    "description": "Hides the search input if true",
-    "required": false,
-    "type": "boolean"
-  },
-  {
-    "name": "loading",
-    "description": "Shows a loading state",
-    "required": false,
-    "type": "boolean"
-  },
-  {
-    "name": "compareFn",
-    "description": "Custom comparison function to check equality of options",
-    "required": false,
-    "type": "((a: MultiSelectOption, b: MultiSelectOption) => boolean)"
-  },
-  {
-    "name": "modelValue",
-    "description": "",
-    "required": false,
-    "type": "String[]",
-    "default": "[]"
-  }
-]'/> 
+## API Reference
 
-## Slots 
- <SlotsTable :data='[
-  {
-    "name": "option",
-    "description": "Rendered for each option in the dropdown. Receives the option object.",
-    "type": "{ item: MultiSelectOption; }"
-  },
-  {
-    "name": "footer",
-    "description": "Footer slot at the bottom of the dropdown. Receives helper functions `clearAll` and `selectAll`.",
-    "type": "{ clearAll: () => void; selectAll: () => void; }"
-  }
-]'/> 
+<PropsTable name="MultiSelect" :data="propsData"/> 
 
-## Emit Events 
- <EmitsTable :data='[
-  {
-    "name": "update:modelValue",
-    "description": "",
-    "type": "[value: String[]]"
-  }
-]'/> 
+<SlotsTable :data="slotsData"/> 
+
+<EmitsTable :data="emitsData"/> 
 

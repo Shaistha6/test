@@ -1,9 +1,5 @@
 <script setup>
 import { reactive } from 'vue'
-import LucideAtSign from 'lucide-vue-next'
-import LucideCheckCircle from 'lucide-vue-next'
-import LucideUsers from 'lucide-vue-next'
-import LucideUser from 'lucide-vue-next'
 
 import {
   Avatar,
@@ -19,14 +15,10 @@ import {
 } from 'frappe-ui'
 
 const custom_columns = reactive([
-  // { label: "Name", key: "name", width: 3, icon: "user" },
-  // { label: "Email", key: "email", width: "200px", icon: "at-sign" },
-  // { label: "Role", key: "role", icon: "users" },
-  // { label: "Status", key: "status", icon: "check-circle" },
-  { label: 'Name', key: 'name', width: 3, icon: LucideUser },
-  { label: 'Email', key: 'email', width: '200px', icon: LucideAtSign },
-  { label: 'Role', key: 'role', icon: LucideUsers },
-  { label: 'Status', key: 'status', icon: LucideCheckCircle },
+  { label: 'Name', key: 'name', width: 3, icon: 'lucide-user' },
+  { label: 'Email', key: 'email', width: '200px', icon: 'lucide-at-sign' },
+  { label: 'Role', key: 'role', icon: 'lucide-users' },
+  { label: 'Status', key: 'status', icon: 'lucide-check-circle' },
 ])
 
 const custom_rows = [
@@ -73,7 +65,7 @@ const custom_rows = [
         :item="column"
       >
         <template #prefix="{ item }">
-          <component :is="item.icon" class="size-4" />
+          <span class="size-4" :class="item.icon" />
         </template>
       </ListHeaderItem>
     </ListHeader>

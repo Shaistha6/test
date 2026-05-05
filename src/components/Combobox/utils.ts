@@ -250,19 +250,19 @@ export function triggerVariantClasses(
 
   return {
     subtle:
-      'border border-[--surface-blueprint-1] bg-surface-blueprint-1 hover:border-outline-blueprint-2 hover:bg-surface-blueprint-2',
+      'border border-[--surface-gray-2] bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3',
     outline:
-      'border border-outline-blueprint-2 bg-surface-white hover:border-outline-blueprint-3',
+      'border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3',
     ghost:
-      'border border-transparent bg-transparent hover:bg-surface-blueprint-2 focus-within:bg-surface-blueprint-2',
+      'border border-transparent bg-transparent hover:bg-surface-gray-3 focus-within:bg-surface-gray-3',
   }[variant]
 }
 
 export const triggerBaseClasses =
-  'relative inline-flex items-center gap-2 text-left text-ink-gray-8 outline-none transition-[background-color,border-color,box-shadow] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus-within:ring-2 data-[state=open]:ring-2 ring-outline-blueprint-1'
+  'relative inline-flex items-center gap-2 text-left text-ink-gray-7 outline-none transition-[background-color,border-color,box-shadow] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] focus-within:ring-2 data-[state=open]:ring-2 ring-outline-gray-3'
 
 export const inputClasses =
   'min-w-0 flex-1 border-0 bg-transparent p-0 text-ink-gray-8 outline-none ring-0 placeholder:text-ink-gray-4 focus:border-0 focus:outline-none focus:ring-0'
 
 export const itemClasses =
-  'select-none rounded border-0 text-base text-ink-gray-9 transition-colors duration-100 ease-out data-[disabled]:text-ink-gray-4 data-[highlighted]:bg-surface-blueprint-2 data-[state=checked]:bg-surface-blueprint-2 data-[highlighted]:data-[state=checked]:bg-surface-blueprint-3'
+  'select-none rounded border-0 text-base text-ink-gray-9 transition-colors duration-100 ease-out data-[disabled]:text-ink-gray-4 data-[highlighted]:bg-surface-gray-2 data-[state=checked]:bg-surface-gray-3 data-[highlighted]:data-[state=checked]:bg-surface-gray-4'
